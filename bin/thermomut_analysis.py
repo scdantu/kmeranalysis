@@ -1,3 +1,4 @@
+#!/usr/bin/env python3.9
 '''
 Created on 8 May 2024
 
@@ -12,7 +13,8 @@ from kmertools.comparekmers import dict_all_kmers
 kmer_length=12
 obj_kmer=Kmer()
 datafol="/Users/sdantu/Library/CloudStorage/OneDrive-BrunelUniversityLondon/Work/Research/Manuscript/Me/3D Sequence Evolution/data"
-db_themo_fname="%s/experimental/thermomut/thermomutdb.json"%(datafol)
+datafol="/mnt/disk_c/scdantu/k-mers/"
+db_themo_fname="%s/thermomut/thermomutdb.json"%(datafol)
 df_thermomut=pd.DataFrame()
 cols_df=["PDB_wild","dtm","effect","mutation_type","mutation_code","ddg"]
 data_out=""
@@ -51,9 +53,10 @@ def process_thermomut_db():
             pdb_fname   =   row["PDB_wild"]
             effect      =   row["effect"]
             mut_code    =   row["mutation_code"]
+            mut_type    =   row["mutation_type"]
             dict_kmers={}
             
-            if(check_pdb_fname(pdb_fname)==True):
+            if(check_pdb_fname(pdb_fname)==True)and(mut_type=="Single"):
                 dict_kmers=get_kmers_for_pdb(pdb_fname)
                 if(len(dict_kmers)>1):
                     process_mutations(mut_code,dict_kmers,effect)
@@ -62,7 +65,7 @@ def process_thermomut_db():
     fileio.save_data("TMut_Out.txt", data_out)
 def check_pdb_fname(pdb_fname):
     is_pdb=False
-    pdb_fpath="%s/experimental/thermomut/pdbs/%s.pdb"%(datafol,pdb_fname)
+    pdb_fpath="%s/thermomut/pdbs/%s.pdb"%(datafol,pdb_fname)
     if(pdb_fname is not None) and(os.path.exists(pdb_fpath)==True):
         if(len(pdb_fname)==4):
             is_pdb=True
@@ -88,7 +91,7 @@ def process_mutations(mut_code,dict_kmers,effect):
                     wt_kmer=dict_kmers[loc][:kmer_length]
                     mt_kmer="%s%s"%(mt_v,wt_kmer[1:])
                     
-                    data_out+="%s,%s,%s,%d\n"%(wt_kmer,"WT",eout,get_kmer_counts(wt_v))
+                    data_out+="%s,%s,%s,%d\n"%(wt_kmer,"WT","ORG",get_kmer_counts(wt_v))
                     
                     if(effect=="destabilizing"):
                         eout="DES"
@@ -107,7 +110,7 @@ def process_mutations(mut_code,dict_kmers,effect):
     #exit()
 def get_kmers_for_pdb(pdbfname):    
     #pdbfname="%s/test/4LYZ.pdb"%(datafol)
-    pdb_fpath="%s/experimental/thermomut/pdbs/%s.pdb"%(datafol,pdbfname)
+    pdb_fpath="%s/thermomut/pdbs/%s.pdb"%(datafol,pdbfname)
     dict_kmer=obj_kmer.get_kmers(pdb_fpath)
     return(dict_kmer)
     

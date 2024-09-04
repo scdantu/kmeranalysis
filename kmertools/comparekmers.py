@@ -1,3 +1,4 @@
+#!/usr/bin/python3.9
 '''
 Created on 9 May 2024
 
@@ -7,6 +8,7 @@ import Levenshtein as levenshtein
 import kmerio.fileIO as fileio
 import kmerio.hashmaps as hmaps
 data_fol="/Users/sdantu/Library/CloudStorage/OneDrive-BrunelUniversityLondon/Work/Research/Manuscript/Me/3D Sequence Evolution/data/kmer"
+data_fol="/mnt/disk_c/scdantu/k-mers/kmerdb"
 fname=""
 kmer_data=[]
 dict_all_kmers={}
